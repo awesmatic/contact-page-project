@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import Header from "./Header";
 import SIdeBar from "./SIdeBar";
-// import Contact from "../../Routes/Contact";
+import IndexRouters from "../../routes/index";
 
 const index: FC = () => {
   return (
@@ -9,9 +9,9 @@ const index: FC = () => {
       <div className=" flex justify-center items-center bg-sky-600 p-4 ">
         <Header />
       </div>
-      <div className="border-2 border-sky-600">
+      <div className="flex border-2 border-sky-600 h-96">
         <SIdeBar />
-        {/* <Contact /> */}
+        <IndexRouters />
       </div>
     </div>
   );
