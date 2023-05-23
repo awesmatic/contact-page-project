@@ -1,10 +1,18 @@
 import React, { FC } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { selectContact } from "../../store";
+import { removeContact } from "../../store/contactReducer";
 
 const CreateContact: FC = () => {
   const contacts = useSelector(selectContact);
+  const dispatch = useDispatch();
   console.log(contacts);
+
+  const handleRemoveContact = (contactId: number | undefined) => {
+    if (typeof contactId === "number") {
+      dispatch(removeContact(contactId));
+    }
+  };
   return (
     <div className="w-full overflow-y-scroll">
       <div className="flex justify-center items-center m-2 ">
@@ -29,7 +37,10 @@ const CreateContact: FC = () => {
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2">
                   Edit Contact
                 </button>
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2">
+                <button
+                  onClick={() => handleRemoveContact(item.id)}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2"
+                >
                   Remove Contact
                 </button>
               </div>
