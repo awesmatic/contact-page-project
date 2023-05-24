@@ -8,7 +8,6 @@ const CreateContact: FC = () => {
   const contacts = useSelector(selectContact);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log(contacts);
 
   const handleRemoveContact = (contactId: number | undefined) => {
     if (typeof contactId === "number") {
@@ -46,7 +45,11 @@ const CreateContact: FC = () => {
         <div className="flex justify-center items-center flex-wrap ">
           {contacts.map((item) => (
             <div key={item.id} className="border-2 border-black  p-4 m-4 ">
-              <h1>{item.firstName}</h1>
+              <div className="flex text-base font-bold">
+                <h1 className="m-1">{item.firstName}</h1>
+                <h1 className="m-1">{item.lastName}</h1>
+                <h1 className="m-1">{item.isActive}</h1>
+              </div>
               <div className="flex flex-col  ">
                 <button
                   onClick={() => handleEditContact(item.id)}

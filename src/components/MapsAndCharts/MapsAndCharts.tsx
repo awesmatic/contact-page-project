@@ -11,15 +11,15 @@ interface Data {
 }
 
 const MapsAndCharts: FC = () => {
-  const worldwideDataQuery = useQuery(
-    ["worldwideData"],
-    () =>
-      axios.get("https://disease.sh/v3/covid-19/all").then((res) => res.data),
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-    }
-  );
+  // const worldwideDataQuery = useQuery(
+  //   ["worldwideData"],
+  //   () =>
+  //     axios.get("https://disease.sh/v3/covid-19/all").then((res) => res.data),
+  //   {
+  //     refetchOnMount: false,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // );
 
   const countryDataQuery = useQuery(
     ["countryData"],
@@ -54,32 +54,24 @@ const MapsAndCharts: FC = () => {
   });
 
   useEffect(() => {
-    if (
-      worldwideDataQuery.isLoading ||
-      countryDataQuery.isLoading ||
-      graphDataQuery.isLoading
-    ) {
+    if (countryDataQuery.isLoading || graphDataQuery.isLoading) {
       setLoading(true);
     } else {
       setLoading(false);
     }
 
-    if (
-      worldwideDataQuery.isError ||
-      countryDataQuery.isError ||
-      graphDataQuery.isError
-    ) {
+    if (countryDataQuery.isError || graphDataQuery.isError) {
       setError(true);
     } else {
       setError(false);
     }
 
-    if (worldwideDataQuery.isSuccess) {
-      setData((prevData) => ({
-        ...prevData,
-        worldwideData: worldwideDataQuery.data,
-      }));
-    }
+    // if (worldwideDataQuery.isSuccess) {
+    //   setData((prevData) => ({
+    //     ...prevData,
+    //     worldwideData: worldwideDataQuery.data,
+    //   }));
+    // }
 
     if (countryDataQuery.isSuccess) {
       setData((prevData) => ({
@@ -95,13 +87,10 @@ const MapsAndCharts: FC = () => {
       }));
     }
   }, [
-    worldwideDataQuery.isLoading,
     countryDataQuery.isLoading,
     graphDataQuery.isLoading,
-    worldwideDataQuery.isError,
     countryDataQuery.isError,
     graphDataQuery.isError,
-    worldwideDataQuery.isSuccess,
     countryDataQuery.isSuccess,
     graphDataQuery.isSuccess,
   ]);
@@ -114,7 +103,8 @@ const MapsAndCharts: FC = () => {
     return <div>An error has occurred.</div>;
   }
 
-  console.log(data);
+  // const countriesData = data.countryData.map(())
+
   const casesData = Object.entries(data.graphData.cases).map(
     ([date, cases]) => ({
       date,
@@ -122,11 +112,10 @@ const MapsAndCharts: FC = () => {
     })
   );
 
-  console.log(casesData);
   return (
     <div className="w-full   ">
       <ChartComponent data={casesData} dataPointLimit={100} />
-      <Maps />
+      <Maps data={data.countryData} />
     </div>
   );
 };

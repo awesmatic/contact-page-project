@@ -12,9 +12,40 @@ L.Icon.Default.prototype.options.iconRetinaUrl = markerIcon;
 L.Icon.Default.prototype.options.iconUrl = markerIcon;
 L.Icon.Default.prototype.options.shadowUrl = markerShadow;
 
-export interface IAppProps {}
+export interface CountryData {
+  active: number;
+  activePerOneMillion: number;
+  cases: number;
+  casesPerOneMillion: number;
+  continent: string;
+  country: string;
+  countryInfo: {
+    flag: string;
+    iso2: string;
+    iso3: string;
+    lat: number;
+    long: number;
+    _id: number;
+  };
+  critical: number;
+  criticalPerOneMillion: number;
+  deaths: number;
+  deathsPerOneMillion: number;
+  oneCasePerPeople: number;
+  oneDeathPerPeople: number;
+  oneTestPerPeople: number;
+  population: number;
+  recovered: number;
+  recoveredPerOneMillion: number;
+  tests: number;
+  testsPerOneMillion: number;
+  todayCases: number;
+  todayDeaths: number;
+  todayRecovered: number;
+  updated: number;
+}
 
-interface CountryData {
+interface CountryDatas {
   country: string;
   activeCases: number;
   recoveredCases: number;
@@ -22,30 +53,12 @@ interface CountryData {
   position: [number, number];
 }
 
-const Maps: FC<IAppProps> = (props) => {
-  const countriesData: CountryData[] = [
-    {
-      country: "United States",
-      activeCases: 10000,
-      recoveredCases: 50000,
-      deaths: 1000,
-      position: [37.0902, -95.7129],
-    },
-    {
-      country: "United Kingdom",
-      activeCases: 5000,
-      recoveredCases: 40000,
-      deaths: 800,
-      position: [55.3781, -3.436],
-    },
-    // Add more country data objects as needed
-  ];
-
+const Maps: FC<{ data: CountryData[] }> = ({ data }) => {
   return (
     <div className="m-2 sm:m-4 ">
       <MapContainer
-        center={[20, 0]}
-        zoom={1}
+        center={[20, 78]}
+        zoom={3}
         scrollWheelZoom={false}
         style={{ height: "270px", width: "100%" }}
       >
@@ -54,13 +67,19 @@ const Maps: FC<IAppProps> = (props) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {countriesData.map((countryData) => (
-          <Marker position={countryData.position} key={countryData.country}>
+        {data.map((countryData) => (
+          <Marker
+            position={[
+              countryData.countryInfo.lat,
+              countryData.countryInfo.long,
+            ]}
+            key={countryData.country}
+          >
             <Popup>
               <div>
                 <h3>{countryData.country}</h3>
-                <p>Active Cases: {countryData.activeCases}</p>
-                <p>Recovered Cases: {countryData.recoveredCases}</p>
+                <p>Active Cases: {countryData.active}</p>
+                <p>Recovered Cases: {countryData.recovered}</p>
                 <p>Deaths: {countryData.deaths}</p>
               </div>
             </Popup>

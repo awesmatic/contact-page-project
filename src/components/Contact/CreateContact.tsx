@@ -25,11 +25,6 @@ const ContactPage: FC<ContactPageProps> = ({ contactId }) => {
     ? contacts.find((contact) => contact.id === id)
     : null;
 
-  console.log(
-    existingContact,
-    contacts.find((contact) => contact.id === id)
-  );
-
   const [contactForm, setContactForm] = useState<ContactFormState>({
     firstName: existingContact?.firstName || "",
     lastName: existingContact?.lastName || "",
@@ -67,8 +62,7 @@ const ContactPage: FC<ContactPageProps> = ({ contactId }) => {
     }
 
     // You can perform further actions with the form data, such as submitting to an API
-    console.log(contactForm);
-    console.log(contacts);
+
     navigate("/contact");
   };
 
