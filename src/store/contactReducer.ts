@@ -29,10 +29,13 @@ export const contactSlice = createSlice({
         (contact) => contact.id !== action.payload
       );
     },
-    editContact: (state, action: PayloadAction<Contact>) => {
-      const updatedContact = action.payload;
-      state.contacts = state.contacts.map((contact) =>
-        contact.id === updatedContact.id ? updatedContact : contact
+    editContact: (
+      state,
+      action: PayloadAction<{ id: number | undefined; contact: Contact }>
+    ) => {
+      const { id, contact } = action.payload;
+      state.contacts = state.contacts.map((c) =>
+        c.id === id ? { ...c, ...contact } : c
       );
     },
   },

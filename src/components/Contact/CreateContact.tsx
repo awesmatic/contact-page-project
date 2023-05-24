@@ -1,7 +1,8 @@
-import React, { useState, FC } from "react";
-import { addContact } from "../../store/contactReducer";
+import React, { useState, FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectContact } from "../../store";
+import { addContact, editContact } from "../../store/contactReducer";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface ContactFormState {
   firstName: string;
@@ -9,14 +10,41 @@ interface ContactFormState {
   isActive: string;
 }
 
-const ContactPage: FC = () => {
+interface ContactPageProps {
+  contactId?: number;
+}
+
+const ContactPage: FC<ContactPageProps> = ({ contactId }) => {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContact);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { id = null } = location.state || {};
+  const existingContact = id
+    ? contacts.find((contact) => contact.id === id)
+    : null;
+
+  console.log(
+    existingContact,
+    contacts.find((contact) => contact.id === id)
+  );
+
   const [contactForm, setContactForm] = useState<ContactFormState>({
-    firstName: "",
-    lastName: "",
-    isActive: "active",
+    firstName: existingContact?.firstName || "",
+    lastName: existingContact?.lastName || "",
+    isActive: existingContact?.isActive || "active",
   });
+
+  useEffect(() => {
+    if (existingContact) {
+      setContactForm({
+        firstName: existingContact.firstName,
+        lastName: existingContact.lastName,
+        isActive: existingContact.isActive,
+      });
+    }
+  }, [existingContact]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -25,15 +53,23 @@ const ContactPage: FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const contact: ContactFormState = {
       firstName: contactForm.firstName,
       lastName: contactForm.lastName,
       isActive: contactForm.isActive,
     };
-    dispatch(addContact(contact));
+
+    if (existingContact) {
+      dispatch(editContact({ id: existingContact.id, contact }));
+    } else {
+      dispatch(addContact(contact));
+    }
+
     // You can perform further actions with the form data, such as submitting to an API
     console.log(contactForm);
     console.log(contacts);
+    navigate("/contact");
   };
 
   return (
@@ -48,6 +84,7 @@ const ContactPage: FC = () => {
               type="text"
               id="firstName"
               name="firstName"
+              required
               value={contactForm.firstName}
               onChange={handleChange}
             />
@@ -58,6 +95,7 @@ const ContactPage: FC = () => {
               className="border-2 border-black m-2"
               type="text"
               id="lastName"
+              required
               name="lastName"
               value={contactForm.lastName}
               onChange={handleChange}
@@ -70,7 +108,7 @@ const ContactPage: FC = () => {
                 <label>
                   <input
                     type="radio"
-                    name="status"
+                    name="isActive"
                     value="active"
                     checked={contactForm.isActive === "active"}
                     onChange={handleChange}
@@ -82,7 +120,7 @@ const ContactPage: FC = () => {
                 <label>
                   <input
                     type="radio"
-                    name="status"
+                    name="isActive"
                     value="inactive"
                     checked={contactForm.isActive === "inactive"}
                     onChange={handleChange}
@@ -96,7 +134,7 @@ const ContactPage: FC = () => {
             className="p-2 border-2 border-black cursor-pointer"
             type="submit"
           >
-            Save Contact
+            {existingContact ? "Save Contact" : "Create Contact"}
           </button>
         </form>
       </div>

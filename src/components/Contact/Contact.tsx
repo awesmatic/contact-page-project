@@ -2,15 +2,22 @@ import React, { FC } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectContact } from "../../store";
 import { removeContact } from "../../store/contactReducer";
+import { useNavigate } from "react-router-dom";
 
 const CreateContact: FC = () => {
   const contacts = useSelector(selectContact);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   console.log(contacts);
 
   const handleRemoveContact = (contactId: number | undefined) => {
     if (typeof contactId === "number") {
       dispatch(removeContact(contactId));
+    }
+  };
+  const handleEditContact = (contactId: number | undefined) => {
+    if (typeof contactId === "number") {
+      navigate("/createContact", { state: { id: contactId } });
     }
   };
   return (
@@ -34,7 +41,10 @@ const CreateContact: FC = () => {
             <div key={item.id} className="border-2 border-black  p-4 m-4 ">
               <h1>{item.firstName}</h1>
               <div className="flex flex-col  ">
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2">
+                <button
+                  onClick={() => handleEditContact(item.id)}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2"
+                >
                   Edit Contact
                 </button>
                 <button
