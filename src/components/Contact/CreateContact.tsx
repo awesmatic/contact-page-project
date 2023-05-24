@@ -74,7 +74,10 @@ const ContactPage: FC<ContactPageProps> = ({ contactId }) => {
 
   return (
     <div className="w-full border border border-black-600">
-      <h1 className="flex justify-center items-center">Contact Page</h1>
+      <h1 className="flex justify-center items-center">
+        {" "}
+        {existingContact ? "Edit Contact Screen" : "Create Contact Screen"}
+      </h1>
       <div className="flex justify-center items-center">
         <form onSubmit={handleSubmit}>
           <div>
@@ -134,7 +137,7 @@ const ContactPage: FC<ContactPageProps> = ({ contactId }) => {
             className="p-2 border-2 border-black cursor-pointer"
             type="submit"
           >
-            {existingContact ? "Save Contact" : "Create Contact"}
+            {existingContact ? "Save Edited Contact" : "Save Contact"}
           </button>
         </form>
       </div>
